@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define LEN 25
+
+int median(int input[]){
+    int n = LEN;
+    printf("\n");
+    for(int i=1; i<n; ++i){
+        for(int j=1; j<n; ++j){
+            if(input[j] < input[j-1]){
+                int tmp = input[j];
+                input[j] = input[j-1];
+                input[j-1] = tmp;
+            }
+        }
+    }
+    return input[n/2];
+}
+
+int main(){
+    srand(time(NULL));
+    int tabl[LEN];
+    
+    for(int i=0; i<LEN; ++i){
+        tabl[i] = rand()%10;
+    }
+    
+    printf("Mediana to %d", median(tabl));
+}
+

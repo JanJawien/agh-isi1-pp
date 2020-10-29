@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <time.h>
+#include <string.h>
+
+const char obietnice[][100] = {
+    "kiełbasę browary i inne towary",
+    "da opiekę lekarską",
+    "da rentę wysoką",
+    "kokosy i banany",
+    "zamiast pracy taniec i śpiew",
+    "każdy będzie miał to co będzie chciał"
+};
+
+int main(){
+    srand(time(NULL));
+    printf("%s\n", obietnice[rand()%6]);
+}
+

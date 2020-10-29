@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <time.h>
+#include <string.h>
+
+
+
+int main(){
+    char txt[] = "ieuriewuriew ewiur hot bui ewuirwe hrew  reiuw fiuew rewu uhiuewr breiuw"; //tekst
+    int n = sizeof(txt)/sizeof(txt[0]);
+    int i = 0;
+    for(i; i<n; ++i){
+        if(txt[i] == 'h' && txt[i+1] == 'o' && txt[i+2] == 't'){
+            break;
+        }
+    }
+    for(i; i<n; ++i){
+        printf("%c", txt[i]);
+    }
+    printf("\n");
+    
+}
+

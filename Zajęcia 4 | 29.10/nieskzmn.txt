@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <time.h>
+
+int fnk(const int n, ...){
+    int suma = 0;
+    va_list lista;
+    va_start(lista, n);
+    
+    for(int i=0; i<n; ++i){
+        suma += va_arg(lista, int);
+    }
+    return suma;
+}
+
+int main(){
+    printf("%d\n", fnk(2, 5, 4));
+    printf("%d\n", fnk(7, 51, 7, 3, 54, 13, 37, 83));
+}
+
