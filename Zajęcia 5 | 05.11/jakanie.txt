@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+typedef enum behaviour {NONE, SPACE, VOWEL, CNSNT, COPY} behav;
+
+char* jakanie(char *input, int n){
+    int word = 1;
+    behav a = SPACE;
+    for(int i=0; i<n; ++i){
+        if(input[i] == ' ') ++word;
+    }
+    
+    int randbank[word+1];
+    randbank[0] = 0;
+    for(int i=1; i<word; ++i){
+        randbank[i] = rand()%3+1;
+        randbank[0] += randbank[i];
+    }
+    
+    char *output = malloc(sizeof(char)*(randbank[0]*2+n)); 
+    for(int i=0; i<n; ++i){
+        if(input[i] == ' ' && a == NONE){
+            a = SPACE; 
+        } else if((input[i] == 'a' || input[i] == 'e' || input[i] == 'i' || input[i] == 'o' || input[i] == 'u' || input[i] == 'y') && a == CNSNT){
+            a = COPY;
+        } else if((input[i] == 'a' || input[i] == 'e' || input[i] == 'i' || input[i] == 'o' || input[i] == 'u' || input[i] == 'y') && a == SPACE){
+            a = VOWEL;
+        } else {
+            if(a == VOWEL) a = COPY;
+            if(a == SPACE) a = CNSNT;
+        }
+        
+        output[strlen(output)] = input[i];
+        if(a == COPY){
+            a = NONE;
+            for(int j=0; j<randbank[word]; ++j){
+                output[strlen(output)] = input[i-1];    
+                output[strlen(output)] = input[i];  
+            }
+            --word;
+        }
+    }
+    return output;
+}
+
+
+
+int main (){
+    srand(time(NULL));
+    char tekst[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at mauris urna. Cras felis varius, varius neque vel, tincidunt.";
+    int len = sizeof(tekst)/sizeof(tekst[0]);
+    
+    char *tetekst = jakanie(tekst, len);
+    
+    for(int i=0; i<len; ++i){
+        printf("%c", tekst[i]);
+    }
+    printf("\n");
+    for(int i=0; i<strlen(tetekst); ++i){
+        printf("%c", tetekst[i]);
+    }
+    printf("\n");
+}
