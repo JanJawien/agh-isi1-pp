@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <time.h>   //losowanie
+#include <stdlib.h> //wymagane
+
+int** tablicadd(int sizea, int sizeb){
+    int **output;
+    output = malloc(sizeof(int*)*sizea);
+    
+    
+    for(int i=0; i<sizea; ++i){
+        output[i] = malloc(sizeof(int)*sizeb);
+    }
+    for(int i=0 ; i<sizea ; i++)
+        for(int j=0 ; j<sizeb ; j++)
+            output[i][j] = rand()%10;
+    
+    return output;
+}
+
+
+int main() {
+    srand(time(NULL));
+    int **tab;
+    int a, b;
+    scanf("%d %d", &a, &b);
+    
+    tab = tablicadd(a, b);
+    
+    
+    for(int i=0; i<a; ++i){
+        for(int j=0; j<b; ++j){
+            printf("%d, ", tab[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+    
+    for(int i=0; i<a; ++i){
+        free(tab[i]);
+    }
+    free(tab);
+    tab = NULL;
+}

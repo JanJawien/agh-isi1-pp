@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <stdlib.h> 
+
+int cmpNum(const void *a, const void *b){ 
+    return(*(int*)a - *(int*)b);
+}
+
+int main(){
+    int tab[] = {5, 13, 2, 17, 4, 7, 11, 8, 1};
+    int tab_len = sizeof(tab)/sizeof(tab[0]);
+    
+    qsort(tab, tab_len, sizeof(tab[0]), cmpNum);
+    
+    int a;
+    printf("Podaj szukany element: ");
+    scanf("%d", &a);
+    
+    int *b;
+    b = bsearch(&a, tab, tab_len, sizeof(tab[0]), cmpNum);
+    
+    if(b == NULL){
+        printf("Nie znaleziono elementu\n");
+    } else {
+        printf("Znaleziono %d na pozycji [%ld]\n", *b, b - tab);
+    }
+    
+    for(int i=0; i<tab_len-1; ++i){
+        printf("%d, ", tab[i]);
+    }
+    printf("%d\n", tab[tab_len-1]);
+}
