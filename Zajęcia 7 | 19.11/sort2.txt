@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <stdlib.h> 
+
+int val(const void *a, const void *b){ 
+    return(*(int*)a - *(int*)b);
+}
+
+void sort(int* tab_poc, int* tab_kon){
+    qsort(tab_poc, (int)(tab_kon - tab_poc), sizeof(*tab_poc), val);
+}
+
+int main(){
+    int a[] = {5, 4, 6, 3, 7, 2, 8, 1, 9};
+    char len = sizeof(a)/sizeof(a[0]);
+    
+    for(int i=0; i<len; ++i){
+        printf("%d, ", a[i]);
+    }
+    printf("\n");
+    
+    sort(&a[0], &a[len]);
+    
+    for(int i=0; i<len; ++i){
+        printf("%d, ", a[i]);
+    }
+    printf("\n");
+}
