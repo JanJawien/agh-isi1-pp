@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h> 
+
+int main(){
+    FILE* plik = fopen("liczby.txt", "r");
+    int liczba, suma=0, ilosc=0;
+    char* linia;
+    size_t len = 0;
+    
+    if(plik == NULL){
+        perror("Błąd otwierania pliku\n");
+        exit(1);
+    }
+    
+    while(getline(&linia, &len, plik) != -1){
+        if(atoi(linia)){
+            liczba = atoi(linia);
+            ++ilosc;
+            suma += liczba;
+        }
+    }
+    fclose(plik);
+    printf("Średnia to %f\n", (float)suma/ilosc);
+    
+}
