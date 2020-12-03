@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <stdlib.h> 
+#include <time.h> 
+
+int getMonth(struct tm* x){
+    return x->tm_mon+1;
+}
+
+int getYear(struct tm* x){
+    return x->tm_year+1900;
+}
+
+int getMDay(struct tm* x){
+    return x->tm_mday;
+}
+
+int main(){
+    //printf("%ld\n", time(NULL));
+    time_t a;
+    
+    time(&a);
+    struct tm* clk;
+    clk = gmtime(&a);
+    
+    printf("%d\n", getMonth(clk));
+    printf("%d\n", getYear(clk));
+    printf("%d\n", getMDay(clk));
+}

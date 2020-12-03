@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h> 
+#include <time.h> 
+#include <math.h> 
+
+#define MAX_KLASA 35
+#define LAKOMSTWO 20 // 0-100
+
+int main(){
+    srand(time(NULL));
+    
+    char klasa = rand()%(MAX_KLASA-20)+21;
+    char cukierki = (klasa/10+1)*10;
+    
+    printf("klasa = %d\ncukierki = %d\n\n", klasa, cukierki);
+    while(klasa>0 && cukierki>0){
+        char dej = (rand()%100)/(100-LAKOMSTWO);
+        
+        if(dej){
+            //printf("moge dwaaaa\n");
+            cukierki -= 2;
+            --klasa;
+        } else {
+            //printf("dzieki\n");
+            --cukierki;
+            --klasa;
+        }
+    }
+    if(klasa){
+        printf("Zostało %d osób bez cukierków\n", klasa);
+    } else {
+        printf("Super, zostało %d cukierków dla mnie\n", cukierki);
+    }
+}
