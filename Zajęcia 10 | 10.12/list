@@ -1,0 +1,157 @@
+#include <stdio.h>
+#include <stdlib.h> 
+#include <time.h> 
+#include <math.h> 
+#include "list.h"
+
+struct Node {
+    Node *prev;
+    Node *next;
+    T value;
+};
+
+struct List {
+    Node *first;
+    Node *last;
+};
+
+struct ListIterator {
+    Node *target;
+};
+
+
+
+List* constructList(T value){
+    Node* item = malloc(sizeof(Node));
+    item->prev = NULL;
+    item->next = NULL;
+    item->value = value;
+    List* newl = malloc(sizeof(List));
+    newl->first = item;
+    newl->last = item;
+    return newl;
+}
+
+List* constructListN(size_t elements, T value){
+    List* newl = malloc(sizeof(List));
+    Node* item = malloc(sizeof(Node));
+    newl->first = item;
+    item->prev = NULL;
+    item->value = value;
+    
+    for(int i=1; i<elements; ++i){
+        item->next = malloc(sizeof(Node));
+        item->next->prev = item;
+        item->next->value = value;
+        item = item->next;
+    }
+    
+    newl->last = item;
+    item->next = NULL;
+    return newl;
+}
+
+List* constructListFromRange(const T* from, const T* to){
+    List* newl = constructListN(to - from, 0);
+    Node* item = newl->first;
+    while(from < to){
+        item->value = *from;
+        item = item->next;
+        ++from;
+    }
+    return newl;
+}
+
+void resize(List *l, size_t newSize){
+    Node* tgt = l->first;
+    char len = 1;
+    for(1; tgt->next; ++len){
+        tgt = tgt->next;
+    }
+    //tgt - ostatni el.
+    while (len > newSize){
+        tgt = tgt->prev;
+        free(tgt->next);
+        tgt->next = NULL;
+        --len;
+    }
+    while (len < newSize){
+        tgt->next = malloc(sizeof(Node));
+        tgt->next->prev = tgt;
+        tgt->next->next = NULL;
+        tgt->next->value = 0;
+        tgt = tgt->next;
+        ++len;
+    }
+    l->last = tgt;
+}
+
+void printList(List *l){ //debug
+    printf("List info;\n\n");
+    Node* tgt = l->first;
+    char len = 1;
+    for(1; tgt->next; ++len){
+        tgt = tgt->next;
+    }
+    printf(" # of nodes: %d\n", len);
+    printf(" @ of first: %d\n", l->first);
+    printf(" @ of last: %d\n\n", l->last);
+    
+    printf(" Pointers status:");
+    tgt = l->first;
+    Node* tmp;
+    char con = 0;
+    while(!con){
+        printf(".");
+        tmp = tgt->next;
+        if(tmp == NULL){
+            if(l->last == tgt){
+                con = 1; //git
+            printf("nominal\n\n");
+            } else {
+                con = 3; //uciete
+            printf("FAILED - cut at node @%d\n(->next points to NULL and node isn't ->last)\n\n", tgt);
+            }
+            break;
+        }
+        if(tgt != tmp->prev){
+            con = 2; //nie wraca
+            printf("FAILED - inconsistent at node @%d\n(->next node isn't pointing back; NOTE: there may be more occurances of this error)\n\n", tgt);
+        } else {
+            tgt = tmp; //dalej
+        }
+    }
+    
+    printf(" Adresses and values:\n");
+    tgt = l->first;
+    for(len = 1; tgt; ++len){
+        printf("   #%d @%d = %d\n", len, tgt, tgt->value);
+        tgt = tgt->next;
+    }
+    
+    printf("\n\n\n");
+}
+    
+    
+    
+int main(){
+    printf("constructListN()\n");
+    List* aaa = constructListN(5, 10);
+    printList(aaa);
+    
+    
+    printf("\nconstructListFromRange()\n");
+    T btab[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    const T* b1 = btab;
+    List* bbb = constructListFromRange(b1, b1+10);
+    printList(bbb);
+    
+    
+    printf("resize()\n");
+    resize(bbb, 6);
+    printList(bbb);
+    resize(bbb, 14);
+    printList(bbb);
+    
+    
+}
