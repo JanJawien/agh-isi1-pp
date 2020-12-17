@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+#define MAXB 256
+#define MAXC 5
+#define PORT 55555
+#define SVIP "127.0.0.1"
+
+
+int main(){
+    struct sockaddr_in adrser = { };
+    
+    adrser.sin_family = AF_INET;
+    adrser.sin_port = htons(PORT);
+    inet_pton( AF_INET, SVIP, &adrser.sin_addr );
+    
+    const int sockdes = socket(AF_INET, SOCK_STREAM, 0);
+    printf("Deskryptor: %d\n", sockdes);
+    
+    if (bind(sockdes, (struct sockaddr *) &adrser, sizeof(adrser))){
+        printf("bind() = -1\n");
+    }
+    
+    if (listen(sockdes, MAXC)){
+        printf("listen() = -1\n");
+    }
+    
+    socklen_t len = sizeof(adrser);
+    
+    while(1){
+        printf("Słucham\n");
+        
+        struct sockaddr_in adrcli = { };
+        
+        const int sockcli = accept(sockdes, (struct sockaddr *) &adrcli, &len);
+        if(sockcli == -1){
+            printf("accept() = -1\n");
+        }
+        
+        char msg[MAXB] = {};
+        char retmsg[] = "Otrzymano wiadomosc\n";
+        
+        if(recv(sockcli, msg, MAXB, 0) < 1){
+            printf("recv() < 1\n");
+        }
+        if(send(sockcli, retmsg, sizeof(retmsg), 0) < 1){
+            printf("send() < 1\n");
+        }
+        
+        shutdown(sockcli, 2);
+        
+        printf("Wiadomość od klienta:\n");
+        for(int i=0; i<MAXB; ++i){
+            printf("%c", msg[i]);
+        }
+        
+    }
+    
+    shutdown(sockdes, 2);
+
+}

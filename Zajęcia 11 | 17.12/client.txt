@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h> // exit()
+#include <string.h> // strlen()
+#include <stdbool.h>
+
+#include <sys/socket.h> // socket()
+#include <netinet/in.h> // struct sockaddr_in
+#include <arpa/inet.h> // inet_pton()
+#include <netdb.h> // gethostbyname(
+
+#define PORT 55555
+#define SVIP "127.0.0.1"
+#define MAXB 256
+
+    
+int main(){
+    struct sockaddr_in adr = { };
+    
+    adr.sin_family = AF_INET;
+    adr.sin_port = htons(PORT);
+    inet_pton( AF_INET, SVIP, &adr.sin_addr );
+    /*
+    printf("%d\n", adr.sin_family);
+    printf("%d\n", adr.sin_port);
+    printf("%d\n", adr.sin_addr.s_addr);
+    printf("%hhn\n", adr.sin_zero);
+    */
+    
+    const int sockdes = socket(AF_INET, SOCK_STREAM, 0);
+    printf("Deskryptor: %d\n", sockdes);
+    
+    if (connect(sockdes, (const struct sockaddr *) &adr, sizeof(adr)) == -1){
+        printf("connect() = -1\n");
+    }
+    
+    char msg[MAXB] = {};
+    char recmsg[MAXB] = {};
+    
+    //scanf("Deskryptor: %d\n", s);
+    printf("Wiadomość do serwera:\n");
+    fgets(msg, MAXB, stdin);
+    
+    printf("Wysyłam:\n");
+    for(int i=0; i<MAXB; ++i){
+        printf("%c", msg[i]);
+    }
+    printf("\n");
+    if(send(sockdes, msg, MAXB, 0) < 1){
+        printf("send() < 1\n");
+    }
+    
+    if(recv(sockdes, recmsg, MAXB, 0) < 1){
+        printf("recv() < 1\n");
+    }
+    
+    printf("Otrzymałem:\n");
+    for(int i=0; i<MAXB; ++i){
+        printf("%c", recmsg[i]);
+    }
+    printf("\n");
+    
+    shutdown(sockdes, 2);
+}
